@@ -1,10 +1,10 @@
-<div class="to-watch">
+<div class="to-watch container">
 
 <section class="movie-search-form">
   <h3>Find a Movie to Watch</h3>
   <form name="searchForm" role="form" novalidate>
     <div class="form-group form-inline">
-      <input type="text" name="title" id="title" class="form-control movie-search" autofocus>
+      <input type="text" name="title" id="title" class="form-control movie-search" ng-model='searchQuery' autofocus>
       <button type="submit" class="btn btn-primary" ng-click="searchFilms()"><i class="fa fa-search"></i></button>
     </div>
     <div class="form-group form-inline">
@@ -15,7 +15,11 @@
   </form>
 </section> <!-- end form section -->
 
-<section class="search-results">
+<section class="search-results" ng-repeat="movie in movies">
+  <!--<ul>
+    <li>{{movie.Title}}</li>
+    <li>{{movie.Year}}</li>
+  </ul>-->
 </section>
 
 <section class="watch-list">

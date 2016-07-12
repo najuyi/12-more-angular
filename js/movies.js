@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('MoviesApp', ['ngSanitize', 'ui.router']);
+var myApp = angular.module('MoviesApp', ['ngSanitize', 'ui.router', "ui.bootstrap"]);
 
 //configure routes
 myApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
@@ -23,6 +23,11 @@ myApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
 			url: '/details/:movie',
 			templateUrl: 'partials/movie-detail.html',
 			controller: 'DetailsCtrl'
+		})
+		.state('watchlist', {
+			url: '/watchlist',
+			templateUrl: 'partials/watchlist.html',
+			controller: 'WatchListCtrl'
 		})
 		$urlRouterProvider.otherwise('/home');
 }]);
@@ -86,7 +91,7 @@ myApp.controller('DetailsCtrl', ['$scope', '$stateParams', '$filter', '$http', f
 
 
 //For to-watch list
-myApp.controller('WatchListCtrl', ['$scope', '$http', function ($scope, $http) {
+myApp.controller('WatchListCtrl', ['$scope', '$http', '$uibModal', function ($scope, $http, $uibModal) {
 
 	//"constants" for priority setting
 	$scope.priorities = ['Very High', 'High', 'Medium', 'Low', 'Very Low'];
@@ -96,10 +101,24 @@ myApp.controller('WatchListCtrl', ['$scope', '$http', function ($scope, $http) {
 	$scope.searchFilms = function () {
 
 		var omdbUri = 'http://www.omdbapi.com/?s=' + $scope.searchQuery + '&type=movie';
-		$http.get(omdbUri).then(function (response) {
+			$http.get(omdbUri).then(function (response) {
 			console.log(response.data.Search); //response is inside the Search field
+			$scope.movies = response.data.Search;
+		});
 
+		var modalInstance = $uibModal.open({
+   			templateUrl: 'partials/select-movie-modal.html', //partial to show
+   			controller: 'ModalCtrl', //controller for the modal
+   			scope: $scope //pass in all our scope variables!
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			$scope.movie = selectedItem;
 		});
 	};
 }]);
-
+myApp.controller('ModalCtrl', ['$scope', '$uibModalInstance'], function($scope, $uibModalInstance) {
+	$scope.selected = function () {
+		
+	}
+});
